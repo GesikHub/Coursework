@@ -2,6 +2,6 @@ package function;
 
 public interface Function {
 	public double f(Double x);
-	//public void getValuesFromXml(String name);
-	//public void setValuesToXml(String name);
+	public void getValuesFromJSON(String name);
+	public void setValuesToJSON(String name);
 }

@@ -1,36 +1,38 @@
 package function;
 
-import point.ArrayPoint;;
+import point.ArrayPoint;
+import point.Point;;
 
 public class FunctionLangrandzh extends DataFunction{
 	
 	public FunctionLangrandzh() {
 		super();
-		values = new ArrayPoint();
 	}
 	public FunctionLangrandzh(ArrayPoint point) {
 		super(point);
 	}
+	public  FunctionLangrandzh(ArrayPoint point, ArrayPoint point1) {
+		super(point, point1);
+	}
 	
 	@Override
 	public double f(Double x) {
-		return langrandzhInterpolation(x);
+			return langrandzhInterpolation(x);
 	}
 	
 	private double langrandzhInterpolation(Double x) {
 		double polinom = 0, basicPolinom = 0;
-		for (int i = 0; i < values.count(); i++)
+		for (int i = 0; i < getValues().count(); i++)
 		{
 			basicPolinom = 1;
-			for (int j = 0; j < values.count(); j++)
+			for (int j = 0; j < getValues().count(); j++)
 			{
 				if (j == i) continue;
-				basicPolinom *= (x - values.get(j).getX())/(values.get(i).getX() - values.get(j).getX());		
+				basicPolinom *= (x - getValues().get(j).getX())/(getValues().get(i).getX() - getValues().get(j).getX());		
 			}
-			polinom += basicPolinom *values.get(i).getY();
+			polinom += basicPolinom * getValues().get(i).getY();
 		}
-		results.addXY(x, polinom);
-		values.addXY(x, polinom);
+		getResults().addXY(x, polinom);
 		return polinom;
 	}
 }

@@ -4,7 +4,9 @@ public class Point implements Comparable<Point>{
 	private Double x;
 	private Double y;
 	
-	Point() {  }
+	public Point() {  
+		
+	}
 	public Point(Double x, Double y) {
 		this.x = x;
 		this.y = y;
@@ -49,5 +51,12 @@ public class Point implements Comparable<Point>{
 	@Override
 	public int compareTo(Point point) {
 		return Double.compare(this.x, point.getX());
+	}
+	
+	@Override
+	public String toString() {
+		String input = "";
+ 		input += "x = " + x + " y = " + y + "\n";
+		return input;
 	}
 }
