@@ -1,7 +1,8 @@
 package function;
 
 import point.ArrayPoint;
-import function.json.FunctionConverter;
+import function.functionException.RepeatXException;
+import point.json.FunctionConverter;
 
 
 public abstract class DataFunction implements Function{
@@ -39,13 +40,20 @@ public abstract class DataFunction implements Function{
 	
 	public void getValuesFromJSON(String name) {
 		FunctionConverter json = new FunctionConverter(); 
-		json.getValuesFromJSON(this, name);
+		json.getValuesFromJSON(this.values, name);
 	}
 	
-	public void setValuesToJSON(String name) {
-		FunctionConverter json = new FunctionConverter(); 
-		DataFunction function = json.setValuesToJSON(name, this.getClass());
-		values = function.getValues();
-		results = function.getResults();
+	public void checkRepeat() throws RepeatXException, Exception {
+		for(int i = 0; i < values.count(); i++) {
+			if(values.checkRepeat(values.get(i).getX(), i))
+				throw new RepeatXException(values.get(i).getX(), i);
+		}
+	}
+	
+	public void setValuesToJSON(String name){
+		FunctionConverter json = new FunctionConverter();
+		ArrayPoint function = json.setValuesToJSON(name);
+		values = function;
+		values.sort();
 	}
 }

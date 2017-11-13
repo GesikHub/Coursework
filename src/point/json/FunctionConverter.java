@@ -1,4 +1,4 @@
-package function.json;
+package point.json;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import function.DataFunction;
 import function.FuctionLinearInterpolation;
+import point.ArrayPoint;
 
 public class FunctionConverter {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -23,29 +24,29 @@ public class FunctionConverter {
 		this.fileOut = fileOut;
 	}
 	
-	public void getValuesFromJSON(DataFunction function, String fileOut) {
+	public void getValuesFromJSON(ArrayPoint points, String fileOut) {
 		 try (FileWriter writer = new FileWriter(fileOut)){
-	            writer.write(gson.toJson(function));
+	            writer.write(gson.toJson(points));
 	            writer.flush();
 	            writer.close();
 	        } catch (IOException ex) {
 	        	System.out.println(ex.toString());
 	        }
 	}	
-	public void getValuesFromJSON(DataFunction function) {
-		 getValuesFromJSON(function, this.fileOut);
+	public void getValuesFromJSON(ArrayPoint points) {
+		 getValuesFromJSON(points, this.fileOut);
 	}
 	
-	public DataFunction setValuesToJSON(String fileIn, Class classOfT) {
+	public ArrayPoint setValuesToJSON(String fileIn) {
 		try {
 			 FileReader fromFile = new FileReader(fileIn);
 			 BufferedReader buffer = new BufferedReader(fromFile);
 			 String data = new String();
 			 String temp = null;
 			 while((temp = buffer.readLine()) != null) {
-				 data += temp + "\n";
+				 data += temp;
 			 }
-			 DataFunction function = (DataFunction) gson.fromJson(data, classOfT);
+			 ArrayPoint function = (ArrayPoint) gson.fromJson(data, ArrayPoint.class);
 			 buffer.close();
 			 return function;
 			} catch(IOException ioException) {
@@ -53,7 +54,7 @@ public class FunctionConverter {
 			} 
 		return null;
 	}
-	public DataFunction setValuesToJSON(Class classOfT) {
-		return setValuesToJSON(this.fileIn, classOfT);
+	public ArrayPoint setValuesToJSON() {
+		return setValuesToJSON(this.fileIn);
 	}
 }

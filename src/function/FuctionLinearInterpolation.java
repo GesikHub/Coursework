@@ -11,6 +11,7 @@ public class FuctionLinearInterpolation extends DataFunction{
 	}
 	public FuctionLinearInterpolation(ArrayPoint point) {
 		super(point);
+		getValues().sort();
 	}
 	public FuctionLinearInterpolation(ArrayPoint point, ArrayPoint point1) {
 		super(point, point1);
@@ -40,6 +41,7 @@ public class FuctionLinearInterpolation extends DataFunction{
 	private double linearInterpolation(Double x) throws LinerInterpolationException, Exception{
 		Point point = new Point(x, 0.0);
 		getValues().addPoint(point);
+		getValues().sort();
 		if(getValues().index(point) == 0 || getValues().index(point) == getValues().count() - 1)
 			throw new LinerInterpolationException(x);
 		int index = getValues().index(new Point(x, 0.0));

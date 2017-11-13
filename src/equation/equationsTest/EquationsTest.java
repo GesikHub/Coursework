@@ -1,27 +1,28 @@
 package equation.equationsTest;
 
 import equation.Equations;
+import equation.equationException.AgreeFunction;
+import equation.equationException.NoRootException;
+import function.DataFunction;
 import function.FuctionLinearInterpolation;
 import function.FunctionLangrandzh;
-import point.ArrayPoint;
 
 public class EquationsTest {
 	public static void main(String[] args) {
-		ArrayPoint points = new ArrayPoint();
-		points.addXY(-1.0, 4.0);
-		points.addXY(0.0, 4.0);
-		points.addXY(-3.0, 4.0);
-		FunctionLangrandzh function = new FunctionLangrandzh(points);
-		System.out.println(function.getValues().count());
+		DataFunction function = new FunctionLangrandzh();
+		function.setValuesToJSON("SeveralRoots.json");
 		
-		ArrayPoint points1 = new ArrayPoint();	
-		points1.addXY(-1.0, 4.0);
-		points1.addXY(0.0, 4.0);
-		points1.addXY(-3.0, 4.0);
-		FuctionLinearInterpolation function1 = new FuctionLinearInterpolation(points1);
-		System.out.println(function1.getValues().count());
+
+		FuctionLinearInterpolation function1 = new FuctionLinearInterpolation();
+		function1.setValuesToJSON("SeveralRoots2.json");
 		
-		Equations eq = new Equations(function1, function);
+		Equations eq = new Equations(function, function1);
+		try {
+			eq.root();
+		} catch (AgreeFunction | NoRootException e) {
+			e.printStackTrace();
+		}
 		System.out.println(eq.toString());
+		eq.writeResult("data.json");
 	}
 }

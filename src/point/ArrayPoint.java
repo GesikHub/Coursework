@@ -19,6 +19,7 @@ public class ArrayPoint {
 	
 	public void addPoint(Point point) {
 		addXY(point.getX(), point.getY());
+		this.sort();
 	}
 	
 	public void sort() {
@@ -42,6 +43,18 @@ public class ArrayPoint {
 	
 	public Point get(int index) {
 		return points.get(index);
+	}
+	
+	public boolean checkRepeat(Double x, int size) {
+		int repeat = 0;
+		for(int i = 0; i < size; i++) {
+			if(x == points.get(i).getX()) {
+				repeat++;
+			}
+		}
+		if(repeat > 0)
+			return true;
+		return false;
 	}
 	
 	@Override
