@@ -18,7 +18,7 @@ public class EquationsTest {
 		
 		Equations eq = new Equations(function, function1);
 		try {
-			eq.root();
+			eq.root(-3.0, 3.0, 0.001);
 		} catch (AgreeFunction | NoRootException e) {
 			e.printStackTrace();
 		}

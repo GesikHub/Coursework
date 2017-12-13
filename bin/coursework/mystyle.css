@@ -1,0 +1,23 @@
+.root {
+    CHART_COLOR_1: #f3622d;
+    CHART_COLOR_2: #fba71b;
+    CHART_COLOR_3: red;
+}
+
+.default-color0.chart-series-line { -fx-stroke: CHART_COLOR_1; }
+.default-color1.chart-series-line { -fx-stroke: CHART_COLOR_2; }
+.default-color2.chart-series-line { -fx-stroke: transparent; }
+.default-color3.chart-series-line { -fx-stroke: transparent; }
+.default-color4.chart-series-line { -fx-stroke: CHART_COLOR_3; }
+
+.default-color0.chart-line-symbol { -fx-background-color: transparent, transparent; }
+.default-color1.chart-line-symbol { -fx-background-color: transparent, transparent; }
+.default-color2.chart-line-symbol { -fx-background-color: CHART_COLOR_1, white; }
+.default-color3.chart-line-symbol { -fx-background-color: CHART_COLOR_2, white; }
+.default-color4.chart-line-symbol { -fx-background-color: transparent, transparent; }
+
+.default-color0.chart-legend-item-symbol{ -fx-background-color: CHART_COLOR_1, white; }
+.default-color1.chart-legend-item-symbol{ -fx-background-color: transparent, transparent; }
+.default-color2.chart-legend-item-symbol{ -fx-background-color: CHART_COLOR_2, white; }
+.default-color3.chart-legend-item-symbol{ -fx-background-color: transparent, transparent; }
+.default-color4.chart-legend-item-symbol{ -fx-background-color: CHART_COLOR_3, white; }

@@ -3,6 +3,7 @@ package function;
 import point.ArrayPoint;
 import point.Point;
 import function.functionException.LinerInterpolationException;
+import javafx.collections.ObservableList;
 
 public class FuctionLinearInterpolation extends DataFunction{
 	
@@ -12,15 +13,17 @@ public class FuctionLinearInterpolation extends DataFunction{
 	public FuctionLinearInterpolation(ArrayPoint point) {
 		super(point);
 		getValues().sort();
+		for(int i = 0; i < getValues().count(); i++) {
+			getResults().addPoint(getValues().get(i));
+		}
 	}
 	public FuctionLinearInterpolation(ArrayPoint point, ArrayPoint point1) {
 		super(point, point1);
 	}
 	
-	
 	@Override
 	public double f(Double x) {
-		int index = this.getValues().index(new Point(x, 0.0));
+		int index = this.getResults().index(x);
 		if(index == -1) {
 			try {
 				return  linearInterpolation(x);
@@ -33,24 +36,23 @@ public class FuctionLinearInterpolation extends DataFunction{
 			}
 		}
 		else {
-			return getValues().get(index).getY();
+			return getResults().get(index).getY();
 		}
 		
 	}
 	
 	private double linearInterpolation(Double x) throws LinerInterpolationException, Exception{
 		Point point = new Point(x, 0.0);
-		getValues().addPoint(point);
-		getValues().sort();
-		if(getValues().index(point) == 0 || getValues().index(point) == getValues().count() - 1)
+		getResults().addPoint(point);
+		getResults().sort();
+		if(getResults().index(x) == 0 || getResults().index(x) == getResults().count() - 1)
 			throw new LinerInterpolationException(x);
-		int index = getValues().index(new Point(x, 0.0));
+		int index = getResults().index(x);
 		Double y; 
-		y = getValues().get(index - 1).getY() + 
-				(((getValues().get(index + 1).getY() - getValues().get(index - 1).getY()) / (getValues().get(index + 1).getX() - getValues().get(index - 1).getX())) * 
-				(x - getValues().get(index - 1).getX()));
-		getValues().get(index).setY(y);
-		getResults().addXY(x, y);
+		y = getResults().get(index - 1).getY() + 
+				(((getResults().get(index + 1).getY() - getResults().get(index - 1).getY()) / (getResults().get(index + 1).getX() - getResults().get(index - 1).getX())) * 
+				(x - getResults().get(index - 1).getX()));
+		getResults().get(index).setY(y);
 		return y;
 	}
 }

@@ -44,9 +44,9 @@ public abstract class DataFunction implements Function{
 	}
 	
 	public void checkRepeat() throws RepeatXException, Exception {
-		for(int i = 0; i < values.count(); i++) {
-			if(values.checkRepeat(values.get(i).getX(), i))
-				throw new RepeatXException(values.get(i).getX(), i);
+		for(int i = 0; i < results.count(); i++) {
+			if(results.checkRepeat(results.get(i).getX(), i))
+				throw new RepeatXException(results.get(i).getX(), i);
 		}
 	}
 	
@@ -55,5 +55,8 @@ public abstract class DataFunction implements Function{
 		ArrayPoint function = json.setValuesToJSON(name);
 		values = function;
 		values.sort();
+		for(int i = 0; i < getValues().count(); i++) {
+			results.addPoint(values.get(i));
+		}
 	}
 }

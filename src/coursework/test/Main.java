@@ -8,9 +8,9 @@ import function.FuctionLinearInterpolation;
 import function.FunctionLangrandzh;
 import function.functionException.RepeatXException;
 
-public class Main {
+//public class Main {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		DataFunction function2 = new FunctionLangrandzh();
 		function2.setValuesToJSON("SomeX.json");
 		while(true) {
@@ -144,4 +144,4 @@ public class Main {
 
 	}
 
-}
+}*/

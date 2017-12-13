@@ -16,6 +16,6 @@ public class ArrayPointTest {
 		points.sort();
 		
 		System.out.println(points.toString());
-		System.out.println(points.index(new Point(3.0, 1.0)));
+		System.out.println(points.index(3.0));
 	}
 }

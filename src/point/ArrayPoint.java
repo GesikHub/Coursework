@@ -30,10 +30,10 @@ public class ArrayPoint {
 		return points.size();
 	}
 	
-	public int index(Point point) {
+	public int index(Double point) {
 		int index = -1;
 		for(int i = 0; i < count(); i++) {
-			if(point.getX() == points.get(i).getX()) {
+			if(point.equals(points.get(i).getX())) {
 				index = i;
 				break;
 			}
@@ -55,6 +55,10 @@ public class ArrayPoint {
 		if(repeat > 0)
 			return true;
 		return false;
+	}
+	
+	public void clear() {
+		points = new ArrayList<>();
 	}
 	
 	@Override
