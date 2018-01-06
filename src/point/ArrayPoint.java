@@ -61,6 +61,10 @@ public class ArrayPoint {
 		points = new ArrayList<>();
 	}
 	
+	public int size() {
+		 return points.size();
+	}
+	
 	@Override
 	public String toString() {
 		String input = "";

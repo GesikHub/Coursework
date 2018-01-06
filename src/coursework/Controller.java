@@ -20,13 +20,12 @@ import com.itextpdf.text.Chapter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Section;
-import com.itextpdf.text.pdf.CMYKColor;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -36,7 +35,6 @@ import equation.equationException.AgreeFunction;
 import equation.equationException.NoRootException;
 import function.DataFunction;
 import function.FuctionLinearInterpolation;
-import function.Function;
 import function.FunctionLangrandzh;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -46,6 +44,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -54,7 +53,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -63,10 +61,12 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.WritableImage;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TablePosition;
+
 import point.Point;
 import point.ArrayPoint;
 
@@ -82,41 +82,58 @@ public class Controller implements Initializable{
 	  
 	  private void showInputXDialog() {
 	        TextInputDialog dialog = new TextInputDialog();
-	        
-	        dialog.setTitle("Point");
-	        dialog.setHeaderText("Enter point:");
-	        dialog.setContentText("X:");
-	 
-	        Optional<String> result = dialog.showAndWait();
-	        
-	        Double y = Double.valueOf(showInputYDialog());
-	        Double x = null;
-	        if(result.isPresent()) {
-	        	x = Double.valueOf(result.get());
+	        Double x, y = null;
+	        try {
+		        dialog.setTitle("Point");
+		        dialog.setHeaderText("Enter point:");
+		        dialog.setContentText("X:");
+		 
+		        Optional<String> result = dialog.showAndWait();
+		        
+		        y = Double.valueOf(showInputYDialog());
+		        x = null;
+		        if(result.isPresent()) {
+		        	x = Double.valueOf(result.get());
+		        }
+	        } catch(Exception e)
+	        {
+		        Alert alert = new Alert(Alert.AlertType.ERROR);
+		        alert.setTitle("");
+		        alert.setHeaderText("Ошибка ввода");
+		        alert.showAndWait();
+		        return;
 	        }
 	        points.addPoint(new Point(x, y));
 	  }
 	  
 	  private void showInputSecondXDialog() {
 	        TextInputDialog dialog = new TextInputDialog();
-	        
-	        dialog.setTitle("Point");
-	        dialog.setHeaderText("Enter point:");
-	        dialog.setContentText("X:");
-	 
-	        Optional<String> result = dialog.showAndWait();
-	        
-	        Double y = Double.valueOf(showInputYDialog());
-	        Double x = null;
-	        if(result.isPresent()) {
-	        	x = Double.valueOf(result.get());
+	        Double x, y = null;
+	        try {
+		        dialog.setTitle("Point");
+		        dialog.setHeaderText("Enter point:");
+		        dialog.setContentText("X:");
+		 
+		        Optional<String> result = dialog.showAndWait();
+		        
+		        y = Double.valueOf(showInputYDialog());
+		        x = null;
+		        if(result.isPresent()) {
+		        	x = Double.valueOf(result.get());
+		        }
+	        } catch(Exception e)
+	        {
+		        Alert alert = new Alert(Alert.AlertType.ERROR);
+		        alert.setTitle("");
+		        alert.setHeaderText("Ошибка ввода");
+		        alert.showAndWait();
+		        return;
 	        }
 	        points2.addPoint(new Point(x, y));
 	  }
 	  
 	  private String showInputYDialog() {
 	        TextInputDialog dialog = new TextInputDialog();
-	        
 	        dialog.setTitle("Point");
 	        dialog.setHeaderText("Enter point:");
 	        dialog.setContentText("Y:");
@@ -161,7 +178,7 @@ public class Controller implements Initializable{
 	@FXML ContextMenu firstContex;
 	
 	//Name SecondContext
-	@FXML ContextMenu SecondContex;
+	@FXML ContextMenu secondContex;
 	
 	//Graphik
 	private final Axis xAxis = new NumberAxis();
@@ -181,10 +198,20 @@ public class Controller implements Initializable{
 		secondGraph.setPlaceholder(new Label(""));
 		updateFirstTable();
 		updateSecondTable();
+		
 	}	
 	
 	@FXML private void doExit(ActionEvent event) {
         Platform.exit();
+	}
+	
+	@FXML private void aboutMe(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Программу створив");
+        alert.setContentText("Студент групи КН-36д\n"
+        		+ "Вдовиченко О. Х.");
+        alert.showAndWait();
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -203,12 +230,20 @@ public class Controller implements Initializable{
 		Double a = Double.parseDouble(start.getText());
 		Double b = Double.parseDouble(finish.getText());
 		Double e = Double.parseDouble(eps.getText());
+		if(points.size() <= 2 || points2.size() <= 2)
+		{
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("");
+	        alert.setHeaderText("Табличных значений недостаточно для подсчета");
+	        alert.showAndWait();
+	        return;
+		}
 		function = new FunctionLangrandzh(points);
 		function1 = new FuctionLinearInterpolation(points2);
-		if(a < points2.get(0).getX()) {
+		if(a < observableList2.get(0).getX()) {
 			TextInputDialog dialog = new TextInputDialog(null);
 			dialog.setTitle("a");
-			dialog.setHeaderText("а не может быть меньше " +  points2.get(0).getX() + "\nВедите коректное значение а\n");
+			dialog.setHeaderText("а не может быть меньше " +  observableList2.get(0).getX() + "\nВедите коректное значение а\n");
 			dialog.setContentText("Name:");
 			Optional<String> result = dialog.showAndWait();
 			if(result.isPresent()) {
@@ -217,15 +252,15 @@ public class Controller implements Initializable{
 	        }
 			return;
 		}
-		if(b > points2.get(points2.count() - 1).getX()) {
+		if(b > observableList2.get(observableList2.size() - 1).getX()) {
 			TextInputDialog dialog = new TextInputDialog(null);
-			dialog.setTitle("a");
+			dialog.setTitle("b");
 			dialog.setHeaderText("b не может быть больше " +  points2.get(points2.count() - 1).getX() + "\nВедите коректное значение b\n");
 			dialog.setContentText("Name:");
 			Optional<String> result = dialog.showAndWait();
 			if(result.isPresent()) {
-	        	a = Double.valueOf(result.get());
-	        	start.setText(String.valueOf(result.get()));
+	        	b = Double.valueOf(result.get());
+	        	finish.setText(String.valueOf(result.get()));
 	        }
 			return;
 		}
@@ -260,6 +295,9 @@ public class Controller implements Initializable{
 				pointsData4.add(new XYChart.Data(points.get(i).getX(), points.get(i).getY()));
 			}
 		}
+		for(int i = 0; i < eq.getRoots().count(); i ++) {
+			pointsData4.add(new XYChart.Data(eq.getRoots().get(i).getX(), eq.getRoots().get(i).getY()));
+		}
 		series.setData(pointsData);
 		series2.setData(pointsData2);
 		series3.setData(pointsData3);
@@ -277,6 +315,7 @@ public class Controller implements Initializable{
             Tooltip.install(node, tooltip);
         });
 	}
+	
 	@FXML private void addNewTable(ActionEvent event) {
 	       FileChooser fileChooser = getFileChooser("Открыть Json-файл");
 	       File file;
@@ -396,6 +435,30 @@ public class Controller implements Initializable{
         }
     }
     
+    @FXML private void help(ActionEvent actionEvent) throws MalformedURLException {
+    	Stage stage = new Stage();
+    	WebView browser = new WebView();
+    	WebEngine webEngine = browser.getEngine();
+    	File file = new File("D:\\Labs\\Coursework\\src\\Contents.html");
+    	URL url= file.toURI().toURL();
+    	webEngine.load(url.toString());;
+    	Scene scene = new Scene(browser, 1220, 800);
+		stage.setTitle("Помощь");
+		stage.setScene(scene);
+		stage.show();
+    }
+    
+    @FXML private void clear(ActionEvent actionEvent){
+    	points.clear();
+    	points2.clear();
+    	updateSecondTable();
+    	updateFirstTable();
+    	graphicLineChart.getData().clear();
+    	start.clear();
+    	finish.clear();
+    	eps.clear();
+    }
+    
     @FXML public void doSavePDF(ActionEvent actionEvent) {
     	FileChooser fileChooser = getFileSave("Сохранить Результат", "pdf");
     	File file;
@@ -403,12 +466,15 @@ public class Controller implements Initializable{
         {
         	Document document = new Document(PageSize.A4, 50, 50, 50, 50);
         	try {
+        		BaseFont time;
+        		try {
+					time = BaseFont.createFont("c:/windows/fonts/times.ttf", "cp1251", BaseFont.EMBEDDED);
 				PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file.getAbsolutePath()));
 	        	document.open();
-	        	Anchor anchorTarget = new Anchor("Звіт");
+	        	Anchor anchorTarget = new Anchor("Звіт", new Font(time, 18));
 	            anchorTarget.setName("BackToTop");
 	            Paragraph title1 = new Paragraph("У результаті розв\'язання рівняння f(x) - g(x) = 0 з такими вихідними даними:", 
-			    		FontFactory.getFont(FontFactory.COURIER, 14, Font.BOLD));
+			    		new Font(time, 18));
 	            title1.setSpacingBefore(50);
 	            title1.add(anchorTarget);
 	            Chapter chapter1 = new Chapter(title1, 1);
@@ -416,7 +482,7 @@ public class Controller implements Initializable{
 	            document.add(chapter1);
 	            
 	            Paragraph title2 = new Paragraph("Дані для функції f(x)", 
-	            		 FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD));
+	            		 new Font(time, 18));
 	            Section section1 = chapter1.addSection(title2);;
 	            PdfPTable f1 = new PdfPTable(2); 
 	            f1.setSpacingBefore(25);
@@ -432,7 +498,7 @@ public class Controller implements Initializable{
 	            section1.add(f1);
 	            
 	            Paragraph title3 = new Paragraph("Дані для функції g(x)", 
-	            		 FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD));
+	            		 new Font(time, 18));
 	            Section section2 = chapter1.addSection(title3);
 	            PdfPTable f2 = new PdfPTable(2); 
 	            f2.setSpacingBefore(25);
@@ -452,18 +518,18 @@ public class Controller implements Initializable{
 	            switch (eq.getRoots().count()) {
                 case 0:
                 	title4 =new Paragraph("було встановлено, що рівняння не має коренів.", 
-                			FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD));
+                			 new Font(time, 18));
     	            section3 = chapter1.addSection(title4);
                     break;
                 default: 
                 	if(eq.getRoots().get(0).getX() == null) {
                 		title4 =new Paragraph("було встановлено, що рівняння має безліч коренів.", 
-                    			FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD));
+                				 new Font(time, 18));
                 		section3 = chapter1.addSection(title4);
                 	}
                 	else {
                 		title4 =new Paragraph("були отримані такі корені:", 
-                    			FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD));
+                				 new Font(time, 18));
                 		section3 = chapter1.addSection(title4);
          	            PdfPTable rez = new PdfPTable(2); 
          	            rez.setSpacingBefore(25);
@@ -480,15 +546,16 @@ public class Controller implements Initializable{
 	     	            section3.add(rez);
                 	}
 	            }
-	            
 	            toImage("new");
 	            Paragraph title5 = new Paragraph("График", 
-	            		 FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD));
-	            Section section4 = chapter1.addSection(title2);;
+	            		 new Font(time, 18));
+	            Section section4 = chapter1.addSection(title5);;
 	            Image image2;
 				try {
+					File imf = new File("src/photonew.png");
 					image2 = Image.getInstance("src/photonew.png");
 		            image2.scaleAbsolute(420f, 420f);
+		            imf.delete();
 		            section4.add(image2);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -505,6 +572,10 @@ public class Controller implements Initializable{
 				e.printStackTrace();
 			} catch (DocumentException e) {
 				e.printStackTrace();
+			}
+    		} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
         }
     }
@@ -530,16 +601,26 @@ public class Controller implements Initializable{
         updateSecondTable();
 	}
 	
+	@FXML private void deleteElement2(ActionEvent event) {
+		ObservableList<Point> observableTemp;
+		observableList2 = secondGraph.getItems();
+		observableTemp = secondGraph.getSelectionModel().getSelectedItems();
+		observableTemp.forEach(observableList2::remove);
+		updateSecondTable();
+	}
+	
+	@FXML private void deleteElement1(ActionEvent event) {
+		ObservableList<Point> observableTemp;
+		observableList = firstGraph.getItems();
+		observableTemp = firstGraph.getSelectionModel().getSelectedItems();
+		observableTemp.forEach(observableList::remove);
+	}
+	
+	
 	private void sortX() {
 		updateData();
 		points.sort();
 		updateFirstTable();
-	}
-	
-	private void sortSecondX() {
-		updateSecondData();
-		points2.sort();
-		updateSecondTable();
 	}
 	
 	private void updateData() {

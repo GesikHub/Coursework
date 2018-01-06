@@ -1,4 +1,5 @@
 package coursework;
+
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -17,13 +18,11 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("app.fxml"));
-		
 		Scene scene = new Scene(root, 1220, 800);
 		
 		stage.setTitle("Постройка графика");
 		stage.setScene(scene);
 		stage.show();
-		
 	}
 
 }
